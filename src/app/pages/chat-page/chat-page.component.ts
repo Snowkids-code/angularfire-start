@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { DocumentData } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { ChatService } from 'src/app/services/chat.service';
@@ -8,11 +8,15 @@ import { ChatService } from 'src/app/services/chat.service';
   templateUrl: './chat-page.component.html',
   styleUrls: ['./chat-page.component.css'],
 })
-export class ChatPageComponent {
+export class ChatPageComponent implements OnInit {
   chatService = inject(ChatService);
   messages$ = this.chatService.loadMessages() as Observable<DocumentData[]>;
   user$ = this.chatService.user$;
   text = '';
+
+  ngOnInit(): void {
+    this.chatService.requestNotificationsPermissions();
+  }
 
   sendTextMessage() {
     this.chatService.saveTextMessage(this.text);
